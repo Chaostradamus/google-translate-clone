@@ -3,18 +3,19 @@ const axios = require("axios").default;
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-
 const app = express();
+
 app.use(cors());
 
 app.get("/languages", async (req, res) => {
   const options = {
     method: "GET",
     headers: {
-      "X-RapidAPI-Host": process.env.RAPID_API_HOST,
-      "X-RapidAPI-Key": process.env.RAPID_API_KEY,
+      "x-rapidapi-host": process.env.RAPID_API_HOST,
+      "x-rapidapi-key": process.env.RAPID_API_KEY,
     },
   };
+
   try {
     const response = await axios(
       "https://google-translate20.p.rapidapi.com/languages",
@@ -25,13 +26,14 @@ app.get("/languages", async (req, res) => {
     );
     res.status(200).json(arrayOfData);
   } catch (err) {
-    console.error(err);
+    console.log(err);
     res.status(500).json({ message: err });
   }
 });
 
 app.get("/translation", async (req, res) => {
   const { textToTranslate, outputLanguage, inputLanguage } = req.query;
+
   const options = {
     method: "GET",
     params: {
@@ -40,19 +42,21 @@ app.get("/translation", async (req, res) => {
       sl: inputLanguage,
     },
     headers: {
-      "X-RapidAPI-Host": process.env.RAPID_API_HOST,
-      "X-RapidAPI-Key": process.env.RAPID_API_KEY,
+      "x-rapidapi-host": process.env.RAPID_API_HOST,
+      "x-rapidapi-key": process.env.RAPID_API_KEY,
     },
   };
+
   try {
     const response = await axios(
-      "google-translate20.p.rapidapi.com/translate",
+      "https://google-translate20.p.rapidapi.com/translate",
       options
     );
     res.status(200).json(response.data.data.translation);
   } catch (err) {
-    console.error(err);
+    console.log(err);
     res.status(500).json({ message: err });
   }
 });
-app.listen(PORT, () => console.log("Server running on Port " + PORT));
+
+app.listen(PORT, () => console.log("Server running on port " + PORT));
